@@ -11,11 +11,11 @@ st.title("⚙️ Edit Schedule")
 # Supabase event functions
 # -------------------------------
 def load_events():
-    response = supabase.table("events").select("*").execute()
+    response = supabase.table("Events").select("*").execute()
     return response.data or []
 
 def add_event(title, start, end, color):
-    supabase.table("events").insert({
+    supabase.table("Events").insert({
         "title": title,
         "start": start,
         "end": end,
@@ -23,7 +23,7 @@ def add_event(title, start, end, color):
     }).execute()
 
 def delete_event(event_id):
-    supabase.table("events").delete().eq("id", event_id).execute()
+    supabase.table("Events").delete().eq("id", event_id).execute()
 
 
 # -------------------------------

@@ -10,7 +10,7 @@ supabase = get_supabase()
 # Load events from Supabase
 # -------------------------------
 def load_events():
-    response = supabase.table("events").select("*").execute()
+    response = supabase.table("Events").select("*").execute()
     events = response.data or []
     # FullCalendar format
     return [
@@ -25,7 +25,7 @@ def load_events():
     ]
 
 def update_event(event_id, start, end):
-    supabase.table("events").update({
+    supabase.table("Events").update({
         "start": start,
         "end": end
     }).eq("id", event_id).execute()
