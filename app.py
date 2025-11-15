@@ -19,7 +19,7 @@ def load_events():
             "title": ev["title"],
             "start": ev["start"],
             "end": ev["end"],
-            "color": ev.get("color", "#4a90e2")
+            "colour": ev.get("colour", "#4a90e2")
         }
         for ev in events
     ]

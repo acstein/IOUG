@@ -14,12 +14,12 @@ def load_events():
     response = supabase.table("Events").select("*").execute()
     return response.data or []
 
-def add_event(title, start, end, color):
+def add_event(title, start, end, colour):
     supabase.table("Events").insert({
         "title": title,
         "start": start,
         "end": end,
-        "color": color
+        "colour": colour
     }).execute()
 
 def delete_event(event_id):
@@ -50,7 +50,7 @@ with st.form("add_event_form"):
     with col3:
         end_time = st.time_input("End", time(10, 0))
 
-    color = st.color_picker("Colour", "#4a90e2")
+    colour = st.color_picker("Colour", "#4a90e2")
 
     submit = st.form_submit_button("Add Event")
 
@@ -60,7 +60,7 @@ if submit:
     else:
         start = f"{day_map[day]}T{start_time.strftime('%H:%M')}:00"
         end = f"{day_map[day]}T{end_time.strftime('%H:%M')}:00"
-        add_event(title, start, end, color)
+        add_event(title, start, end, colour)
         st.success(f"Added: {title}")
         st.experimental_rerun()
 
