@@ -17,9 +17,9 @@ def load_events():
         {
             "id": ev["id"],
             "title": ev["title"],
-            "start": ev["start"],   # must be full datetime: "2025-06-16T09:00"
+            "start": ev["start"],   # full ISO datetime
             "end": ev["end"],
-            "color": ev.get("colour", "#4a90e2"),  # ← FullCalendar expects "color"
+            "color": ev.get("colour", "#4a90e2"),  # FullCalendar uses "color"
         }
         for ev in events
     ]
@@ -84,7 +84,15 @@ calendar_html = f"""
     border-radius: 6px;
     border: none !important;
     color: white !important;
-    padding: 4px 6px;
+    padding: 2px 4px;
+    font-size: 0.8rem;
+    white-space: normal;       /* allow text wrap */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }}
+
+  .fc-event-title {{
+    line-height: 1.1;
   }}
 </style>
 </head>
@@ -99,9 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {{
   var calendarEl = document.getElementById('calendar');
 
   var calendar = new FullCalendar.Calendar(calendarEl, {{
-    locale: 'en-gb',                  // ← UK dates (dd/mm) + Monday start
+    locale: 'en-gb',                  // UK date format (dd/mm) + Monday start
     initialView: 'timeGridWeek',
-    initialDate: '2025-12-01',        // ← Pin to your conference week
+    initialDate: '2025-06-16',        // pin to your conference week
     editable: true,
     selectable: true,
     allDaySlot: false,
@@ -110,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     slotMinTime: "08:30:00",
     slotMaxTime: "17:00:00",
 
-    eventTimeFormat: {{               // ← 24 hour time
+    eventTimeFormat: {{               // 24-hour time
       hour: "2-digit",
       minute: "2-digit",
       hour12: false
@@ -124,10 +132,32 @@ document.addEventListener('DOMContentLoaded', function() {{
     eventResize: function(info) {{
       sendUpdate(info.event);
     }},
+
+    eventDidMount: function(info) {{
+      // Add tooltip with full event title
+      info.el.setAttribute('title', info.event.title);
+    }}
   }});
 
   calendar.render();
 
+  // --------------------------------
+  // Mobile responsiveness
+  // --------------------------------
+  function handleResize() {{
+      if (window.innerWidth < 768) {{
+          calendar.changeView('listWeek');
+      }} else {{
+          calendar.changeView('timeGridWeek');
+      }}
+  }}
+
+  window.addEventListener('resize', handleResize);
+  handleResize();  // call once on load
+
+  // --------------------------------
+  // Send drag/drop updates to Streamlit
+  // --------------------------------
   function sendUpdate(event) {{
     const updated = {{
       id: event.id,
