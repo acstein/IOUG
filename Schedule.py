@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {{
   var calendar = new FullCalendar.Calendar(calendarEl, {{
     locale: 'en-gb',                  // UK date format (dd/mm) + Monday start
     initialView: 'timeGridWeek',
-    initialDate: '2025-06-16',        // pin to your conference week
+    initialDate: '2025-12-01',        // pin to your conference week
     editable: true,
     selectable: true,
     allDaySlot: false,
