@@ -62,7 +62,7 @@ if submit:
         end = f"{day_map[day]}T{end_time.strftime('%H:%M')}:00"
         add_event(title, start, end, colour)
         st.success(f"Added: {title}")
-        st.experimental_rerun()
+        st.rerun()
 
 
 # -------------------------------
@@ -81,4 +81,4 @@ else:
         with st.expander(f"{ev['title']} – {ev['start']}"):
             if st.button("Delete", key=ev["id"]):
                 delete_event(ev["id"])
-                st.experimental_rerun()
+                st.rerun()

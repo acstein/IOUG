@@ -41,7 +41,7 @@ if "calendar_update" not in st.session_state:
     st.session_state.calendar_update = None
 
 # Detect update request from JS
-params = st.experimental_get_query_params()
+params = st.get_query_params()
 if "updated_event" in params:
     updated = json.loads(params["updated_event"][0])
     st.session_state.calendar_update = updated
