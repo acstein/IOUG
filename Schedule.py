@@ -3,7 +3,7 @@ import json
 import streamlit.components.v1 as components
 from supabase_client import get_supabase
 
-st.set_page_config(page_title="Conference Schedule", layout="wide")
+st.set_page_config(page_title="Schedule", layout="wide")
 supabase = get_supabase()
 
 # -------------------------------
@@ -34,7 +34,7 @@ def update_event(event_id, start, end):
 # --------------------------------
 # Main page UI
 # --------------------------------
-st.title("📅 Conference Schedule")
+st.title("Schedule")
 
 # Holder to capture JS events
 if "calendar_update" not in st.session_state:
@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {{
     selectable: true,
     allDaySlot: false,
     expandRows: true,
-    slotMinTime: "08:00:00",
-    slotMaxTime: "22:00:00",
+    slotMinTime: "08:30:00",
+    slotMaxTime: "17:00:00",
     events: {json.dumps(events)},
 
     eventDrop: function(info) {{
@@ -136,4 +136,4 @@ document.addEventListener('DOMContentLoaded', function() {{
 </html>
 """
 
-components.html(calendar_html, height=800, scrolling=True)
+components.html(calendar_html, height=600, scrolling=True)

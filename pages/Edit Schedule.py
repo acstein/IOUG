@@ -5,7 +5,7 @@ from supabase_client import get_supabase
 
 supabase = get_supabase()
 
-st.title("⚙️ Edit Schedule")
+st.title("Edit Schedule")
 
 # -------------------------------
 # Supabase event functions
@@ -32,11 +32,11 @@ def delete_event(event_id):
 st.subheader("➕ Add New Event")
 
 day_map = {
-    "Monday": "2025-03-10",
-    "Tuesday": "2025-03-11",
-    "Wednesday": "2025-03-12",
-    "Thursday": "2025-03-13",
-    "Friday": "2025-03-14",
+    "Monday": "2025-12-01",
+    "Tuesday": "2025-12-02",
+    "Wednesday": "2025-12-03",
+    "Thursday": "2025-12-04",
+    "Friday": "2025-12-05",
 }
 
 with st.form("add_event_form"):
@@ -68,7 +68,7 @@ if submit:
 # -------------------------------
 # Delete existing events
 # -------------------------------
-st.subheader("🗂 Existing Events")
+st.subheader("Existing Events")
 events = load_events()
 
 if not events:
