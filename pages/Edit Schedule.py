@@ -74,8 +74,8 @@ events = load_events()
 if not events:
     st.info("No events yet.")
 else:
-    df = pd.DataFrame(events)
-    st.dataframe(df, use_container_width=True)
+    #df = pd.DataFrame(events)
+    #st.dataframe(df, use_container_width=True)
 
     for ev in events:
         with st.expander(f"{ev['title']} – {ev['start']}"):
