@@ -6,7 +6,7 @@ from supabase_client import get_supabase
 st.set_page_config(page_title="Schedule", layout="wide")
 supabase = get_supabase()
 
-st.logo('logo.jpeg', size='large')
+st.sidebar.image('logo.jpeg')
 
 # -------------------------------
 # Load events from Supabase
