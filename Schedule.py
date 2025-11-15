@@ -12,14 +12,14 @@ supabase = get_supabase()
 def load_events():
     response = supabase.table("Events").select("*").execute()
     events = response.data or []
-    # FullCalendar format
+
     return [
         {
             "id": ev["id"],
             "title": ev["title"],
-            "start": ev["start"],
+            "start": ev["start"],   # must be full datetime: "2025-06-16T09:00"
             "end": ev["end"],
-            "colour": ev.get("colour", "#4a90e2")
+            "color": ev.get("colour", "#4a90e2"),  # ← FullCalendar expects "color"
         }
         for ev in events
     ]
@@ -34,7 +34,7 @@ def update_event(event_id, start, end):
 # --------------------------------
 # Main page UI
 # --------------------------------
-st.title("Schedule")
+st.title("Conference Schedule")
 
 # Holder to capture JS events
 if "calendar_update" not in st.session_state:
@@ -60,14 +60,14 @@ events = load_events()
 # -------------------------------
 calendar_html = f"""
 <!DOCTYPE html>
-<html>
+<html lang="en-gb">
 <head>
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
 <style>
   body {{
-    background: #f7f7f9;
+    background: #f0f2f6;
     font-family: Sans-serif;
   }}
 
@@ -76,15 +76,15 @@ calendar_html = f"""
     margin: 20px auto;
     background: white;
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   }}
 
   .fc-event {{
-    border-radius: 8px;
-    padding: 3px 6px;
+    border-radius: 6px;
+    border: none !important;
     color: white !important;
-    border: none;
+    padding: 4px 6px;
   }}
 </style>
 </head>
@@ -99,13 +99,23 @@ document.addEventListener('DOMContentLoaded', function() {{
   var calendarEl = document.getElementById('calendar');
 
   var calendar = new FullCalendar.Calendar(calendarEl, {{
+    locale: 'en-gb',                  // ← UK dates (dd/mm) + Monday start
     initialView: 'timeGridWeek',
+    initialDate: '2025-12-01',        // ← Pin to your conference week
     editable: true,
     selectable: true,
     allDaySlot: false,
     expandRows: true,
+
     slotMinTime: "08:30:00",
     slotMaxTime: "17:00:00",
+
+    eventTimeFormat: {{               // ← 24 hour time
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }},
+
     events: {json.dumps(events)},
 
     eventDrop: function(info) {{
@@ -136,4 +146,4 @@ document.addEventListener('DOMContentLoaded', function() {{
 </html>
 """
 
-components.html(calendar_html, height=600, scrolling=True)
+components.html(calendar_html, height=650, scrolling=True)
