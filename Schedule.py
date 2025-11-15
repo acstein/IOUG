@@ -83,7 +83,6 @@ calendar_html = f"""
   .fc-event {{
     border-radius: 6px;
     border: none !important;
-    color: white !important;
     padding: 2px 4px;
     font-size: 0.8rem;
     white-space: normal;       /* allow text wrap */
@@ -104,12 +103,22 @@ calendar_html = f"""
 <script>
 document.addEventListener('DOMContentLoaded', function() {{
 
+  // Function to determine readable text color based on background
+  function getContrastYIQ(hexcolor){{
+      hexcolor = hexcolor.replace("#", "");
+      var r = parseInt(hexcolor.substr(0,2),16);
+      var g = parseInt(hexcolor.substr(2,2),16);
+      var b = parseInt(hexcolor.substr(4,2),16);
+      var yiq = ((r*299)+(g*587)+(b*114))/1000;
+      return (yiq >= 128) ? 'black' : 'white';
+  }}
+
   var calendarEl = document.getElementById('calendar');
 
   var calendar = new FullCalendar.Calendar(calendarEl, {{
-    locale: 'en-gb',                  // UK date format (dd/mm) + Monday start
+    locale: 'en-gb',                  // UK date format
     initialView: 'timeGridWeek',
-    initialDate: '2025-12-01',        // pin to your conference week
+    initialDate: '2025-12-01',        // pinned conference week
     editable: true,
     selectable: true,
     allDaySlot: false,
@@ -134,16 +143,22 @@ document.addEventListener('DOMContentLoaded', function() {{
     }},
 
     eventDidMount: function(info) {{
-      // Add tooltip with full event title
+      // Tooltip for full title
       info.el.setAttribute('title', info.event.title);
+
+      // Force background and readable text color for all views
+      let color = info.event.backgroundColor || info.event.color || '#4a90e2';
+      info.el.style.backgroundColor = color;
+      info.el.style.color = getContrastYIQ(color);
+      info.el.style.border = 'none';
     }}
   }});
 
   calendar.render();
 
-  // --------------------------------
+  // ------------------------------
   // Mobile responsiveness
-  // --------------------------------
+  // ------------------------------
   function handleResize() {{
       if (window.innerWidth < 768) {{
           calendar.changeView('listWeek');
@@ -155,9 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {{
   window.addEventListener('resize', handleResize);
   handleResize();  // call once on load
 
-  // --------------------------------
+  // ------------------------------
   // Send drag/drop updates to Streamlit
-  // --------------------------------
+  // ------------------------------
   function sendUpdate(event) {{
     const updated = {{
       id: event.id,
